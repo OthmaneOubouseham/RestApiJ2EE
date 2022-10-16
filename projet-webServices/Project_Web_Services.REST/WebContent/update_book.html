@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+ <head>
+ 
+  <title>Form to update a new resource</title>
+ </head>
+<body>
+  <form action="http://localhost:8089/Project_Web_Services.REST/rest/v1/books/update" method="POST">
+  <label for="id">ID</label>
+  <input name="id" type="text" />
+   <br/>
+   <label for="author">Summary</label>
+  <input name="author" />
+  <br/>
+  <label for="publisher">publisher</label>
+  <input name="publisher" />
+  <br/>
+   <input type="hidden" name="_method" value="PUT" />
+  <input type="submit" value="Submit" />
+  </form>
+</body>
+</html> 

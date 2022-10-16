@@ -1,0 +1,1311 @@
+swagger: "2.0"
+info:
+  description: "### The structure of the project\n
+  The project consists of a multitude of folders, most notably :\n
+* SQL scripts - files used to create and fill the Database (more on that later)\n
+* Project_Web_Services.REST : Back-End side of the project, its main core\n
+* Project_Web_Services.CLIENT : Front-End side of the project, the website if you will\n"
+  version: "1.0.0"
+  title: "Multimedias store"
+  contact:
+    email: "eddy.dulche@efrei.net"
+host: "localhost:8080"
+basePath: "/Project_Web_Services.REST/rest/v1"
+tags:
+- name: "multimedias"
+  description: "Everything about all categories of multimedias"
+- name: "books"
+  description: "Operations about books"
+- name: "films"
+  description: "Operations about films"
+- name: "videoGames"
+  description: "Operations about videoGames"
+- name: "users"
+  description: "Operations about users"
+- name: "rates"
+  description: "Operations about rates"
+- name: "comments"
+  description: "Operations about comments"
+schemes:
+- "http"
+paths:
+  /multimedias:
+    get:
+      tags:
+      - "multimedias"
+      summary: "Finds Multimedias"
+      description: "Possibility to sort by average.\n
+      Return every categories of multimedias, like books, films and videoGames"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "query"
+        name: "start"
+        type: "integer"
+        minimum: 0.0
+        format: "int64"
+        description: "start index for the pagging"
+        required: false
+      - in: "query"
+        name: "end"
+        type: "integer"
+        minimum: 0.0
+        format: "int64"
+        description: "end index for the pagging"
+        required: false
+      - in: "query"
+        name: "title"
+        type: string
+        description: "filter by the title"
+        required: false
+      - in: "query"
+        name: "uploader"
+        type: "integer"
+        minimum: 1.0
+        format: "int64"
+        description: "filter by the id of the uploader"
+        required: false
+      - in: "query"
+        name: "sort"
+        type: string
+        description: "sort the return array by a field"
+        required: false
+      responses:
+        200:
+          description: "Ok"
+          schema:
+            type: "array"
+            items:
+              anyOf:
+              - $ref: '#/definitions/Book'
+              - $ref: '#/definitions/Film'
+              - $ref: '#/definitions/VideoGame'
+        404:
+          description: "No Multimedias was found !"
+  /multimedias/{id_multimedia}:
+    get:
+      tags:
+      - "multimedias"
+      summary: "Find Multimedia by ID"
+      description: ""
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id_multimedia"
+        in: "path"
+        description: "ID of the Multimedia that we want to find"
+        required: true
+        type: "integer"
+        minimum: 1.0
+        format: "int64"
+      responses:
+        200:
+          description: "Ok"
+          schema:
+            $ref: '#/definitions/Book'
+        404:
+          description: "The Multimedia with the id `{id_multimedia}` was not found !"
+    delete:
+      tags:
+      - "multimedias"
+      summary: "Delete Multimedia by ID"
+      description: "For valid response try integer IDs with positive integer value.         Negative or non-integer values will generate API errors"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id_multimedia"
+        in: "path"
+        description: "ID of the Multimedia that needs to be deleted"
+        required: true
+        type: "integer"
+        minimum: 1.0
+        format: "int64"
+      responses:
+        200:
+          description: "Ok"
+          schema:
+            type: "boolean"
+        404:
+          description: "The Multimedia with the id `{id_multimedia}` was not found !"
+  /books:
+    get:
+      tags:
+      - "books"
+      summary: "Finds Books"
+      description: "Possibility to sort by average."
+      produces:
+      - "application/json"
+      parameters:
+      - in: "query"
+        name: "start"
+        type: "integer"
+        minimum: 0.0
+        format: "int64"
+        description: "start index for the pagging"
+        required: false
+      - in: "query"
+        name: "end"
+        type: "integer"
+        minimum: 0.0
+        format: "int64"
+        description: "end index for the pagging"
+        required: false
+      - in: "query"
+        name: "title"
+        type: string
+        description: "filter by the title"
+        required: false
+      - in: "query"
+        name: "uploader"
+        type: "integer"
+        minimum: 1.0
+        format: "int64"
+        description: "filter by the id of the uploader"
+        required: false
+      - in: "query"
+        name: "sort"
+        type: string
+        description: "sort the return array by a field"
+        required: false
+      responses:
+        200:
+          description: "Ok"
+          schema:
+            type: "array"
+            items:
+              $ref: '#/definitions/Book'
+        404:
+          description: "No Books was found !"
+    post:
+      tags:
+      - "books"
+      summary: "Add Book"
+      description: ""
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "book"
+        schema:
+          $ref: '#/definitions/Book'
+        required: true
+      responses:
+        201:
+          description: "Created"
+          schema:
+            $ref: '#/definitions/Book'
+        500:
+          description: "Le champ 'title' ne peut être vide (null)"
+  /books/{id_book}:
+    get:
+      tags:
+      - "books"
+      summary: "Find Book by ID"
+      description: ""
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id_book"
+        in: "path"
+        description: "ID of the Book that we want to find"
+        required: true
+        type: "integer"
+        minimum: 1.0
+        format: "int64"
+      responses:
+        200:
+          description: "Ok"
+          schema:
+            $ref: '#/definitions/Book'
+        404:
+          description: "The Book with the id `{id_book}` was not found !"
+    put:
+      tags:
+      - "books"
+      summary: "Update Book by ID"
+      description: ""
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id_book"
+        in: "path"
+        description: "ID of the Book that we want to update"
+        required: true
+        type: "integer"
+        minimum: 1.0
+        format: "int64"
+      - in: "body"
+        name: "book"
+        schema:
+          $ref: '#/definitions/Book'
+        required: true
+      responses:
+        200:
+          description: "Ok"
+          schema:
+            $ref: '#/definitions/Book'
+        500:
+          description: ""
+    delete:
+      tags:
+      - "books"
+      summary: "Delete Book by ID"
+      description: "For valid response try integer IDs with positive integer value.         Negative or non-integer values will generate API errors"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id_book"
+        in: "path"
+        description: "ID of the Book that needs to be deleted"
+        required: true
+        type: "integer"
+        minimum: 1.0
+        format: "int64"
+      responses:
+        200:
+          description: "Ok"
+          schema:
+            type: "boolean"
+        404:
+          description: "The Book with the id `{id_book}` was not found !"
+  /books/count:
+    get:
+      tags:
+      - "books"
+      summary: "Find the number of Books"
+      description: ""
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "Ok"
+          schema:
+            type: "integer"
+  /films:
+    get:
+      tags:
+      - "films"
+      summary: "Finds Films"
+      description: "Possibility to sort by average."
+      produces:
+      - "application/json"
+      parameters:
+      - in: "query"
+        name: "start"
+        type: "integer"
+        minimum: 0.0
+        format: "int64"
+        description: "start index for the pagging"
+        required: false
+      - in: "query"
+        name: "end"
+        type: "integer"
+        minimum: 0.0
+        format: "int64"
+        description: "end index for the pagging"
+        required: false
+      - in: "query"
+        name: "title"
+        type: string
+        description: "filter by the title"
+        required: false
+      - in: "query"
+        name: "uploader"
+        type: "integer"
+        minimum: 1.0
+        format: "int64"
+        description: "filter by the id of the uploader"
+        required: false
+      - in: "query"
+        name: "sort"
+        type: string
+        description: "sort the return array by a field"
+        required: false
+      responses:
+        200:
+          description: "Ok"
+          schema:
+            type: "array"
+            items:
+              $ref: '#/definitions/Film'
+        404:
+          description: "No Films was found !"
+    post:
+      tags:
+      - "films"
+      summary: "Add Film"
+      description: ""
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "film"
+        schema:
+          $ref: '#/definitions/Film'
+        required: true
+      responses:
+        201:
+          description: "Created"
+          schema:
+            $ref: '#/definitions/Film'
+        500:
+          description: "Le champ 'title' ne peut être vide (null)"
+  /films/{id_film}:
+    get:
+      tags:
+      - "films"
+      summary: "Find Film by ID"
+      description: ""
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id_film"
+        in: "path"
+        description: "ID of the Film that we want to find"
+        required: true
+        type: "integer"
+        minimum: 1.0
+        format: "int64"
+      responses:
+        200:
+          description: "Ok"
+          schema:
+            $ref: '#/definitions/Film'
+        404:
+          description: "The Film with the id `{id_film}` was not found !"
+    put:
+      tags:
+      - "films"
+      summary: "Update Film by ID"
+      description: ""
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id_film"
+        in: "path"
+        description: "ID of the Film that we want to update"
+        required: true
+        type: "integer"
+        minimum: 1.0
+        format: "int64"
+      - in: "body"
+        name: "book"
+        schema:
+          $ref: '#/definitions/Film'
+        required: true
+      responses:
+        200:
+          description: "Ok"
+          schema:
+            $ref: '#/definitions/Film'
+        500:
+          description: ""
+    delete:
+      tags:
+      - "films"
+      summary: "Delete Film by ID"
+      description: "For valid response try integer IDs with positive integer value.         Negative or non-integer values will generate API errors"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id_film"
+        in: "path"
+        description: "ID of the Film that needs to be deleted"
+        required: true
+        type: "integer"
+        minimum: 1.0
+        format: "int64"
+      responses:
+        200:
+          description: "Ok"
+          schema:
+            type: "boolean"
+        404:
+          description: "The Film with the id `{id_film}` was not found !"
+  /films/count:
+    get:
+      tags:
+      - "films"
+      summary: "Find the number of Films"
+      description: ""
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "Ok"
+          schema:
+            type: "integer"
+  /videoGames:
+    get:
+      tags:
+      - "videoGames"
+      summary: "Finds VideoGames"
+      description: "Possibility to sort by average."
+      produces:
+      - "application/json"
+      parameters:
+      - in: "query"
+        name: "start"
+        type: "integer"
+        minimum: 0.0
+        format: "int64"
+        description: "start index for the pagging"
+        required: false
+      - in: "query"
+        name: "end"
+        type: "integer"
+        minimum: 0.0
+        format: "int64"
+        description: "end index for the pagging"
+        required: false
+      - in: "query"
+        name: "title"
+        type: string
+        description: "filter by the title"
+        required: false
+      - in: "query"
+        name: "uploader"
+        type: "integer"
+        minimum: 1.0
+        format: "int64"
+        description: "filter by the id of the uploader"
+        required: false
+      - in: "query"
+        name: "sort"
+        type: string
+        description: "sort the return array by a field"
+        required: false
+      responses:
+        200:
+          description: "Ok"
+          schema:
+            type: "array"
+            items:
+              $ref: '#/definitions/VideoGame'
+        404:
+          description: "No VideoGames was found !"
+    post:
+      tags:
+      - "videoGames"
+      summary: "Add VideoGame"
+      description: ""
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "book"
+        schema:
+          $ref: '#/definitions/VideoGame'
+        required: true
+      responses:
+        201:
+          description: "Created"
+          schema:
+            $ref: '#/definitions/VideoGame'
+        500:
+          description: "Le champ 'title' ne peut être vide (null)"
+  /videoGames/{id_videoGame}:
+    get:
+      tags:
+      - "videoGames"
+      summary: "Find VideoGames by ID"
+      description: ""
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id_videoGame"
+        in: "path"
+        description: "ID of the VideoGame that we want to find"
+        required: true
+        type: "integer"
+        minimum: 1.0
+        format: "int64"
+      responses:
+        200:
+          description: "Ok"
+          schema:
+            type: "array"
+            items:
+              $ref: '#/definitions/VideoGame'
+        404:
+          description: "The VideoGames with the id `{id_videoGame}` was not found !"
+    put:
+      tags:
+      - "videoGames"
+      summary: "Update VideoGame by ID"
+      description: ""
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id_videoGame"
+        in: "path"
+        description: "ID of the VideoGame that we want to update"
+        required: true
+        type: "integer"
+        minimum: 1.0
+        format: "int64"
+      - in: "body"
+        name: "book"
+        schema:
+          $ref: '#/definitions/VideoGame'
+        required: true
+      responses:
+        200:
+          description: "Ok"
+          schema:
+            $ref: '#/definitions/VideoGame'
+        500:
+          description: ""
+    delete:
+      tags:
+      - "videoGames"
+      summary: "Delete VideoGames by ID"
+      description: "For valid response try integer IDs with positive integer value.         Negative or non-integer values will generate API errors"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id_videoGame"
+        in: "path"
+        description: "ID of the VideoGames that needs to be deleted"
+        required: true
+        type: "integer"
+        minimum: 1.0
+        format: "int64"
+      responses:
+        200:
+          description: "Ok"
+          schema:
+            type: "boolean"
+        404:
+          description: "The VideoGames with the id `{id_videoGames}` was not found !"
+  /videoGames/count:
+    get:
+      tags:
+      - "videoGames"
+      summary: "Find the number of VideoGames"
+      description: ""
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "Ok"
+          schema:
+            type: "integer"
+  /users:
+    get:
+      tags:
+      - "users"
+      summary: "Finds Users"
+      description: ""
+      produces:
+      - "application/json"
+      parameters:
+      - in: "query"
+        name: "start"
+        type: "integer"
+        minimum: 0.0
+        format: "int64"
+        description: "start index for the pagging"
+        required: false
+      - in: "query"
+        name: "end"
+        type: "integer"
+        minimum: 0.0
+        format: "int64"
+        description: "end index for the pagging"
+        required: false
+      responses:
+        200:
+          description: "Ok"
+          schema:
+            type: "array"
+            items:
+              $ref: '#/definitions/User'
+        404:
+          description: "No Users was found !"
+    post:
+      tags:
+      - "users"
+      summary: "Add User"
+      description: ""
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "user"
+        schema:
+          $ref: '#/definitions/User'
+        required: true
+      responses:
+        201:
+          description: "Created"
+          schema:
+            $ref: '#/definitions/User'
+        500:
+          description: "Un user doit être donné en paramètre !"
+  /users/{id_user}:
+    get:
+      tags:
+      - "users"
+      summary: "Find User by ID"
+      description: ""
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id_user"
+        in: "path"
+        description: "ID of the User that we want to find"
+        required: true
+        type: "integer"
+        minimum: 1.0
+        format: "int64"
+      responses:
+        200:
+          description: "Ok"
+          schema:
+            $ref: '#/definitions/User'
+        404:
+          description: "The User with the id `{id_user}` was not found !"
+    put:
+      tags:
+      - "users"
+      summary: "Update User by ID"
+      description: ""
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id_user"
+        in: "path"
+        description: "ID of the User that we want to update"
+        required: true
+        type: "integer"
+        minimum: 1.0
+        format: "int64"
+      - in: "body"
+        name: "user"
+        schema:
+          $ref: '#/definitions/User'
+        required: true
+      responses:
+        200:
+          description: "Ok"
+          schema:
+            $ref: '#/definitions/User'
+        500:
+          description: ""
+    delete:
+      tags:
+      - "users"
+      summary: "Delete User by ID"
+      description: "For valid response try integer IDs with positive integer value.         Negative or non-integer values will generate API errors"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id_user"
+        in: "path"
+        description: "ID of the User that needs to be deleted"
+        required: true
+        type: "integer"
+        minimum: 1.0
+        format: "int64"
+      responses:
+        200:
+          description: "Ok"
+          schema:
+            type: "boolean"
+        404:
+          description: "The User with the id `{id_user}` was not found !"
+  /users/{id_user}/checkPassword:
+    get:
+      tags:
+      - "users"
+      summary: "Check the password for a User"
+      description: ""
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id_user"
+        in: "path"
+        description: "ID of the User that we want to check its password"
+        required: true
+        type: "integer"
+        minimum: 1.0
+        format: "int64"
+      - name: "password"
+        in: "query"
+        description: "password of the User to be checked"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Ok"
+          schema:
+            type: "boolean"
+  /users/login:
+    get:
+      tags:
+      - "users"
+      summary: "Check the credentials for a User"
+      description: ""
+      produces:
+      - "application/json"
+      parameters:
+      - name: "username"
+        in: "query"
+        description: "username of the User to be checked"
+        required: true
+        type: "string"
+      - name: "password"
+        in: "query"
+        description: "password of the User to be checked"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Ok"
+          schema:
+            $ref: '#/definitions/User'
+        404:
+          description: "Invalide credentials !"
+  /users/count:
+    get:
+      tags:
+      - "users"
+      summary: "Find the number of Users"
+      description: ""
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "Ok"
+          schema:
+            type: "integer"
+  /rates:
+    get:
+      tags:
+      - "rates"
+      summary: "Finds Rates"
+      description: ""
+      produces:
+      - "application/json"
+      parameters:
+      - in: "query"
+        name: "start"
+        type: "integer"
+        minimum: 0.0
+        format: "int64"
+        description: "start index for the pagging"
+        required: false
+      - in: "query"
+        name: "end"
+        type: "integer"
+        minimum: 0.0
+        format: "int64"
+        description: "end index for the pagging"
+        required: false
+      - in: "query"
+        name: "id_user"
+        type: "integer"
+        minimum: 0.0
+        format: "int64"
+        description: "filter by a User ID"
+        required: false
+      - in: "query"
+        name: "id_multimedia"
+        type: "integer"
+        minimum: 0.0
+        format: "int64"
+        description: "filter by a Multimedia ID"
+        required: false
+      - in: "query"
+        name: "value"
+        type: "integer"
+        description: "filter by a value"
+        required: false
+      responses:
+        200:
+          description: "Ok"
+          schema:
+            $ref: '#/definitions/Rate'
+        404:
+          description: "No Rates was found !"
+    post:
+      tags:
+      - "rates"
+      summary: "Add Rate"
+      description: ""
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "rate"
+        schema:
+          $ref: '#/definitions/Rate'
+        required: true
+      responses:
+        201:
+          description: "Created"
+          schema:
+            $ref: '#/definitions/Rate'
+        500:
+          description: "Un Rate doit être donné en paramètre !"
+  /rates/{id_rate}:
+    get:
+      tags:
+      - "rates"
+      summary: "Find Rate by ID"
+      description: ""
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id_rate"
+        in: "path"
+        description: "ID of the Rate that we want to find"
+        required: true
+        type: "integer"
+        minimum: 1.0
+        format: "int64"
+      responses:
+        200:
+          description: "Ok"
+          schema:
+            $ref: '#/definitions/Rate'
+        404:
+          description: "The Rate with the id `{id_rate}` was not found !"
+    put:
+      tags:
+      - "rates"
+      summary: "Update Rate by ID"
+      description: ""
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id_rate"
+        in: "path"
+        description: "ID of the Rate that we want to update"
+        required: true
+        type: "integer"
+        minimum: 1.0
+        format: "int64"
+      - in: "body"
+        name: "rate"
+        schema:
+          $ref: '#/definitions/Rate'
+        required: true
+      responses:
+        200:
+          description: "Ok"
+          schema:
+            $ref: '#/definitions/Rate'
+        500:
+          description: ""
+    delete:
+      tags:
+      - "rates"
+      summary: "Delete Rate by ID"
+      description: "For valid response try integer IDs with positive integer value.         Negative or non-integer values will generate API errors"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id_rate"
+        in: "path"
+        description: "ID of the Rate that needs to be deleted"
+        required: true
+        type: "integer"
+        minimum: 1.0
+        format: "int64"
+      responses:
+        200:
+          description: "Ok"
+          schema:
+            type: "boolean"
+        404:
+          description: "The Rate with the id `{id_rate}` was not found !"
+  /rates/count:
+    get:
+      tags:
+      - "rates"
+      summary: "Find the number of Rates"
+      description: ""
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "Ok"
+          schema:
+            type: "integer"
+  /comments:
+    get:
+      tags:
+      - "comments"
+      summary: "Finds Rates"
+      description: ""
+      produces:
+      - "application/json"
+      parameters:
+      - in: "query"
+        name: "start"
+        type: "integer"
+        minimum: 0.0
+        format: "int64"
+        description: "start index for the pagging"
+        required: false
+      - in: "query"
+        name: "end"
+        type: "integer"
+        minimum: 0.0
+        format: "int64"
+        description: "end index for the pagging"
+        required: false
+      - in: "query"
+        name: "id_user"
+        type: "integer"
+        minimum: 0.0
+        format: "int64"
+        description: "filter by a User ID"
+        required: false
+      - in: "query"
+        name: "id_multimedia"
+        type: "integer"
+        minimum: 0.0
+        format: "int64"
+        description: "filter by a Multimedia ID"
+        required: false
+      - in: "query"
+        name: "value"
+        type: "string"
+        description: "filter by a value"
+        required: false
+      responses:
+        200:
+          description: "Ok"
+          schema:
+            $ref: '#/definitions/Comment'
+        404:
+          description: "No Rates was found !"
+    post:
+      tags:
+      - "comments"
+      summary: "Add Comment"
+      description: ""
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "comment"
+        schema:
+          $ref: '#/definitions/Comment'
+        required: true
+      responses:
+        201:
+          description: "Created"
+          schema:
+            $ref: '#/definitions/Comment'
+        500:
+          description: "Un Comment doit être donné en paramètre !"
+  /comments/{id_comment}:
+    get:
+      tags:
+      - "comments"
+      summary: "Find Comment by ID"
+      description: ""
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id_comment"
+        in: "path"
+        description: "ID of the Comment that we want to find"
+        required: true
+        type: "integer"
+        minimum: 1.0
+        format: "int64"
+      responses:
+        200:
+          description: "Ok"
+          schema:
+            $ref: '#/definitions/Comment'
+        404:
+          description: "The Comment with the id `{id_comment}` was not found !"
+    put:
+      tags:
+      - "comments"
+      summary: "Update Comment by ID"
+      description: ""
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id_comment"
+        in: "path"
+        description: "ID of the Comment that we want to update"
+        required: true
+        type: "integer"
+        minimum: 1.0
+        format: "int64"
+      - in: "body"
+        name: "comment"
+        schema:
+          $ref: '#/definitions/Comment'
+        required: true
+      responses:
+        200:
+          description: "Ok"
+          schema:
+            $ref: '#/definitions/Comment'
+        500:
+          description: ""
+    delete:
+      tags:
+      - "comments"
+      summary: "Delete Comment by ID"
+      description: "For valid response try integer IDs with positive integer value.         Negative or non-integer values will generate API errors"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id_comment"
+        in: "path"
+        description: "ID of the Comment that needs to be deleted"
+        required: true
+        type: "integer"
+        minimum: 1.0
+        format: "int64"
+      responses:
+        200:
+          description: "Ok"
+          schema:
+            type: "boolean"
+        404:
+          description: "The Comment with the id `{id_comment}` was not found !"
+  /comments/count:
+    get:
+      tags:
+      - "comments"
+      summary: "Find the number of Comments"
+      description: ""
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "Ok"
+          schema:
+            type: "integer"
+definitions:
+  Link:
+    type: "object"
+    properties:
+      rel:
+        type: "string"
+      href:
+        type: "string"
+        format: "url"
+  Book:
+    type: "object"
+    properties:
+      id_multimedia:
+        type: "integer"
+        format: "int64"
+      title:
+        type: "string"
+      description:
+        type: "string"
+      language:
+        type: "string"
+      genre:
+        type: "string"
+      category:
+        type: "integer"
+      status:
+        type: "integer"
+      date_status:
+        type: "object"
+        properties:
+          value:
+            type: "string"
+            format: "date-time"
+      date_upload:
+        type: "object"
+        properties:
+          value:
+            type: "string"
+            format: "date-time"
+      date_release:
+        type: "object"
+        properties:
+          value:
+            type: "string"
+            format: "date"
+      links:
+        type: "array"
+        items:
+          $ref: "#/definitions/Link"
+      id_book:
+        type: "integer"
+        format: "int64"
+      author:
+        type: "string"
+      publisher:
+        type: "string"
+      average:
+        type: "number"
+  Film:
+    type: "object"
+    properties:
+      id_multimedia:
+        type: "integer"
+        format: "int64"
+      title:
+        type: "string"
+      description:
+        type: "string"
+      language:
+        type: "string"
+      genre:
+        type: "string"
+      category:
+        type: "integer"
+      status:
+        type: "integer"
+      date_status:
+        type: "object"
+        properties:
+          value:
+            type: "string"
+            format: "date-time"
+      date_upload:
+        type: "object"
+        properties:
+          value:
+            type: "string"
+            format: "date-time"
+      date_release:
+        type: "object"
+        properties:
+          value:
+            type: "string"
+            format: "date"
+      links:
+        type: "array"
+        items:
+          $ref: "#/definitions/Link"
+      id_films:
+        type: "integer"
+        format: "int64"
+      director:
+        type: "string"
+      productor:
+        type: "string"
+      mainCast:
+        type: "string"
+      duration:
+        type: "object"
+        properties:
+          value:
+            type: "string"
+            format: "time"
+      average:
+        type: "number"
+  VideoGame:
+    type: "object"
+    properties:
+      id_multimedia:
+        type: "integer"
+        format: "int64"
+      title:
+        type: "string"
+      description:
+        type: "string"
+      language:
+        type: "string"
+      genre:
+        type: "string"
+      category:
+        type: "integer"
+      status:
+        type: "integer"
+      date_status:
+        type: "object"
+        properties:
+          value:
+            type: "string"
+            format: "date-time"
+      date_upload:
+        type: "object"
+        properties:
+          value:
+            type: "string"
+            format: "date-time"
+      date_release:
+        type: "object"
+        properties:
+          value:
+            type: "string"
+            format: "date"
+      links:
+        type: "array"
+        items:
+          $ref: "#/definitions/Link"
+      id_videoGame:
+        type: "integer"
+        format: "int64"
+      developer:
+        type: "string"
+      publisher:
+        type: "string"
+      average:
+        type: "number"
+  User:
+    type: "object"
+    properties:
+      id_user:
+        type: "integer"
+        format: "int64"
+      pseudo:
+        type: "string"
+      email:
+        type: "string"
+        format: "email"
+      creation_date:
+        type: "object"
+        properties:
+          value:
+            type: "string"
+            format: "date-time"
+      links:
+        type: "array"
+        items:
+          $ref: "#/definitions/Link"
+  Rate:
+    type: "object"
+    properties:
+      id_rate:
+        type: "integer"
+        format: "int64"
+      value:
+        type: "integer"
+      creation_date:
+        type: "object"
+        properties:
+          value:
+            type: "string"
+            format: "date-time"
+      links:
+        type: "array"
+        items:
+          $ref: "#/definitions/Link"
+  Comment:
+    type: "object"
+    properties:
+      id_comment:
+        type: "integer"
+        format: "int64"
+      value:
+        type: "string"
+      creation_date:
+        type: "object"
+        properties:
+          value:
+            type: "string"
+            format: "date-time"
+      links:
+        type: "array"
+        items:
+          $ref: "#/definitions/Link"
